@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOC — Generador de Alertas</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- TABS -->
+  <div class="tab-bar">
+    <div class="tab active-ad" id="tabAD" onclick="window.__core.switchTab('ad')">
+      <span class="tdot tdot-ad"></span>AD On-Prem
+    </div>
+    <div class="tab" id="tabVPN" onclick="window.__core.switchTab('vpn')">
+      <span class="tdot tdot-vpn"></span>VPN
+    </div>
+    <div class="tab" id="tabFile" onclick="window.__core.switchTab('file')">
+      <span class="tdot tdot-file"></span>Archivos
+    </div>
+    <div class="tab" id="tabConn" onclick="window.__core.switchTab('conn')">
+      <span class="tdot tdot-conn"></span>Conexiones sospechosas
+    </div>
+  </div>
+
+  <!-- FORM PANEL -->
+  <div class="form-panel">
+
+    <!-- AD FORM -->
+    <div id="adForm">
+      <p class="panel-label">⬡ AD On-Prem — Datos del evento</p>
+      <div class="field">
+        <label>Tipo de evento</label>
+        <div class="tipo-grid">
+          <button class="tipo-btn active" data-tipo="Cuenta deshabilitada" onclick="window.__ad.selectTipo(this)"><span class="dot2"></span>Cuenta deshabilitada</button>
+          <button class="tipo-btn" data-tipo="Cuenta creada" onclick="window.__ad.selectTipo(this)"><span class="dot2"></span>Cuenta creada</button>
+          <button class="tipo-btn" data-tipo="Cuenta eliminada" onclick="window.__ad.selectTipo(this)"><span class="dot2"></span>Cuenta eliminada</button>
+          <button class="tipo-btn" data-tipo="Password reset" onclick="window.__ad.selectTipo(this)"><span class="dot2"></span>Password reset</button>
+          <button class="tipo-btn" data-tipo="Adición a grupo admin" onclick="window.__ad.selectTipo(this)" style="grid-column:1/-1"><span class="dot2"></span>Adición a grupo admin</button>
+        </div>
+      </div>
+      <div class="field hidden" id="grupoField">
+        <label>Grupo al que se agrega</label>
+        <input id="adGrupo" type="text" placeholder="Domain Admins, Enterprise Admins...">
+      </div>
+      <div class="field">
+        <label>Severidad</label>
+        <select id="adSev">
+          <option value="MEDIUM">Medium</option>
+          <option value="HIGH">High</option>
+          <option value="LOW">Low</option>
+        </select>
+      </div>
+      <div class="field"><label>Ticket ID</label><input id="adTicket" type="text" placeholder="TKT-2026-XXXX"></div>
+      <div class="field"><label>Timestamp</label><input id="adTimestamp" type="text" placeholder="2026-05-21 03:47:12 UTC-6"></div>
+      <div class="field"><label>Descripción</label><input id="adDesc" type="text" placeholder="A user account was disabled."></div>
+      <div class="field"><label>Usuario ejecutor</label><input id="adEjecutorUser" type="text" placeholder="nombre.apellido"></div>
+      <div class="field"><label>ID Usuario ejecutor</label><input id="adEjecutorId" type="text" placeholder="B03259"></div>
+      <div class="field"><label>Hostname</label><input id="adHostname" type="text" placeholder="WKSTN-B03259"></div>
+      <div class="field"><label>Usuario afectado</label><input id="adAfectadoUser" type="text" placeholder="nombre.apellido"></div>
+      <div class="field"><label>ID Usuario afectado / SID</label><input id="adAfectadoId" type="text" placeholder="B02373  o  S-1-5-21-XXXX"></div>
+      <button class="generate-btn btn-ad" onclick="window.__ad.generate()">Generar mensaje ↗</button>
+    </div>
+
+    <!-- VPN FORM -->
+    <div id="vpnForm" class="hidden">
+      <p class="panel-label" style="color:var(--vpn)">⬡ VPN — Datos del evento</p>
+      <div class="field">
+        <label>Motivo</label>
+        <div class="subtipo-grid">
+          <button class="sbtn active" onclick="window.__vpn.selectMotivo(this,'Fuera de país')">🌍 Fuera de país</button>
+          <button class="sbtn" onclick="window.__vpn.selectMotivo(this,'Fuera de horario')">🕐 Fuera de horario</button>
+          <button class="sbtn" onclick="window.__vpn.selectMotivo(this,'Fuera de país + horario')">⚡ Ambas</button>
+        </div>
+      </div>
+      <div class="field"><label>Case ID</label><input id="vCaseId" type="text" placeholder="CASE-2026-XXXX"></div>
+      <div class="field"><label>Timestamp</label><input id="vTimestamp" type="text" placeholder="2026-05-21 03:47:12 UTC-6"></div>
+      <div class="field"><label>User</label><input id="vUser" type="text" placeholder="nombre.apellido"></div>
+      <div class="field"><label>Hostname</label><input id="vHostname" type="text" placeholder="WKSTN-B03259"></div>
+      <div class="field"><label>IP</label><input id="vIp" type="text" placeholder="203.0.113.45"></div>
+      <div class="field">
+        <label>VT Score</label>
+        <div class="vt-row">
+          <input id="vtScore" type="number" min="0" max="90" value="0" placeholder="0" oninput="window.__vpn.updateVT(this.value)">
+          <span class="vt-display" id="vtDisplay" style="color:#86efac">0 / 90</span>
+        </div>
+      </div>
+      <div class="field"><label>Country (out of Mexico)</label><input id="vCountry" type="text" placeholder="Ej. Russia, China..."></div>
+      <div class="field">
+        <label>Veredicto</label>
+        <div class="veredicto-grid" id="vpnVeredictoGrid">
+          <button class="vbtn v-benigna"    onclick="window.__vpn.selectVeredicto(this,'benigna')">✅ Benigna</button>
+          <button class="vbtn v-sospechosa" onclick="window.__vpn.selectVeredicto(this,'sospechosa')">⚠️ Sospechosa</button>
+          <button class="vbtn v-maliciosa"  onclick="window.__vpn.selectVeredicto(this,'maliciosa')">🚨 Maliciosa</button>
+        </div>
+      </div>
+      <div class="field"><label>Blacklist</label><input id="vBlacklist" type="text" placeholder="Sí / No / Nombre de la lista"></div>
+      <button class="generate-btn btn-vpn" onclick="window.__vpn.generate()">Generar mensaje ↗</button>
+    </div>
+
+    <!-- FILE FORM -->
+    <div id="fileForm" class="hidden">
+      <p class="panel-label" style="color:var(--file)">⬡ Archivos — Datos del evento</p>
+      <div class="field"><label>Case ID</label><input id="fCaseId" type="text" placeholder="CASE-2026-XXXX"></div>
+      <div class="field"><label>Time Stamp</label><input id="fTimestamp" type="text" placeholder="2026-05-21 03:47:12 UTC-6"></div>
+      <div class="field">
+        <label>Severidad</label>
+        <select id="fSev">
+          <option>Medium</option><option>High</option><option>Low</option>
+          <option>Critical</option><option>Informational</option>
+        </select>
+      </div>
+      <div class="field"><label>Descripción</label><textarea id="fDesc" placeholder="Descripción del evento..."></textarea></div>
+      <div class="field"><label>Categoría</label><input id="fCategoria" type="text" placeholder="Ej. Malware, Ransomware..."></div>
+      <div class="field"><label>Source</label><input id="fSource" type="text" placeholder="Ej. Wildfire, XDR, EDR..."></div>
+      <div class="field"><label>Host</label><input id="fHost" type="text" placeholder="WKSTN-B03259"></div>
+      <div class="field"><label>User</label><input id="fUser" type="text" placeholder="nombre.apellido"></div>
+      <div class="field"><label>IP</label><input id="fIp" type="text" placeholder="10.0.0.1"></div>
+      <div class="field"><label>Tipo de activo</label><input id="fTipoActivo" type="text" placeholder="Ej. Workstation, Server..."></div>
+      <div class="field"><label>Nombre de archivo</label><input id="fNombreArchivo" type="text" placeholder="malware.exe"></div>
+      <div class="field"><label>Ruta de archivo</label><input id="fRuta" type="text" placeholder="C:\Users\usuario\AppData\..."></div>
+      <div class="field"><label>Hash</label><input id="fHash" type="text" placeholder="SHA256: abc123..."></div>
+      <div class="field"><label>Líneas de comando</label><textarea id="fCmdLine" placeholder="cmd.exe /c powershell.exe -enc ..."></textarea></div>
+      <div class="field"><label>Análisis</label><textarea id="fAnalisis" placeholder="Hallazgos del análisis..."></textarea></div>
+      <div class="field">
+        <label>Veredicto Wildfire</label>
+        <select id="fWildfire">
+          <option>Benigno</option><option>Malicioso</option>
+          <option>Grayware</option><option>Phishing</option><option>Desconocido</option>
+        </select>
+      </div>
+      <button class="generate-btn btn-file" onclick="window.__file.generate()">Generar mensaje ↗</button>
+    </div>
+
+    <!-- CONN FORM -->
+    <div id="connForm" class="hidden">
+      <p class="panel-label" style="color:var(--conn)">⬡ Conexiones sospechosas — Datos del evento</p>
+      <div class="field"><label>Case ID</label><input id="cCaseId" type="text" placeholder="CASE-2026-XXXX"></div>
+      <div class="field"><label>Time Stamp</label><input id="cTimestamp" type="text" placeholder="2026-05-21 03:47:12 UTC-6"></div>
+      <div class="field"><label>Descripción</label><textarea id="cDesc" placeholder="Descripción del evento..."></textarea></div>
+      <div class="field"><label>Host</label><input id="cHost" type="text" placeholder="WKSTN-B03259"></div>
+      <div class="field"><label>User</label><input id="cUser" type="text" placeholder="nombre.apellido"></div>
+      <div class="field"><label>Tipo de activo</label><input id="cTipoActivo" type="text" placeholder="Ej. Workstation, Server..."></div>
+      <div class="field"><label>IP Origen</label><input id="cIpOrigen" type="text" placeholder="10.0.0.1"></div>
+      <div class="field"><label>IP Destino</label><input id="cIpDestino" type="text" placeholder="203.0.113.45"></div>
+      <div class="field"><label>Dominio (si aplica)</label><input id="cDominio" type="text" placeholder="malicious-domain.com"></div>
+      <div class="field">
+        <label>VT Score</label>
+        <div class="vt-row">
+          <input id="cVtScore" type="number" min="0" max="90" value="0" placeholder="0" oninput="window.__conn.updateVT(this.value)">
+          <span class="vt-display" id="cVtDisplay" style="color:#86efac">0 / 90</span>
+        </div>
+      </div>
+      <div class="field">
+        <label>Veredicto</label>
+        <div class="veredicto-grid" id="connVeredictoGrid">
+          <button class="vbtn v-conocida"   onclick="window.__conn.selectVeredicto(this,'conocida')">✅ Conocida</button>
+          <button class="vbtn v-sospechosa" onclick="window.__conn.selectVeredicto(this,'sospechosa')">⚠️ Sospechosa</button>
+          <button class="vbtn v-maliciosa"  onclick="window.__conn.selectVeredicto(this,'maliciosa')">🚨 Maliciosa</button>
+        </div>
+      </div>
+      <button class="generate-btn btn-conn" onclick="window.__conn.generate()">Generar mensaje ↗</button>
+    </div>
+
+  </div>
+
+  <!-- PREVIEW PANEL -->
+  <div class="preview-panel">
+    <div class="preview-top">
+      <p class="panel-label" id="previewLabel">⬡ Vista previa — AD</p>
+      <div style="display:flex;align-items:center">
+        <span class="copied-msg" id="copiedMsg">¡Copiado!</span>
+        <button class="copy-btn" onclick="window.__core.copyPlain()">Copiar texto plano</button>
+      </div>
+    </div>
+
+    <div class="bubble-wrap">
+
+      <!-- AD CARD -->
+      <div class="msg-card" id="cardAD">
+        <div class="msg-header msg-header-ad">
+          <div class="msg-avatar avatar-ad">SOC</div>
+          <span class="msg-sender">SOC — AD Alert</span>
+          <span class="msg-time" id="adTime">--:--</span>
+        </div>
+        <div class="msg-body">
+          <div class="msg-title" id="adCardTitle">*[AD ALERT — MEDIUM]*</div>
+          <div class="msg-fields">
+            <div class="msg-field"><span class="msg-field-label">*Evento:*</span><span class="msg-field-value" id="cAdEvento">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Timestamp:*</span><span class="msg-field-value" id="cAdTimestamp">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Descripción:*</span><span class="msg-field-value" id="cAdDesc">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Ticket ID:*</span><span class="msg-field-value" id="cAdTicket">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Usuario ejecutor:*</span><span class="msg-field-value" id="cAdEjUser">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*ID Usuario ejecutor:*</span><span class="msg-field-value" id="cAdEjId">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Hostname:*</span><span class="msg-field-value" id="cAdHostname">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Usuario afectado:*</span><span class="msg-field-value" id="cAdAfUser">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*ID / SID:*</span><span class="msg-field-value" id="cAdAfId">—</span></div>
+            <div class="msg-field hidden" id="cAdGrupoRow"><span class="msg-field-label">*Grupo:*</span><span class="msg-field-value" id="cAdGrupo">—</span></div>
+          </div>
+        </div>
+        <div class="msg-footer"><span>AD On-Prem · Real-time</span><span>SOC</span></div>
+      </div>
+
+      <!-- VPN CARD -->
+      <div class="msg-card hidden" id="cardVPN" style="border-left-color:var(--vpn)">
+        <div class="msg-header msg-header-vpn">
+          <div class="msg-avatar avatar-vpn">SOC</div>
+          <span class="msg-sender">SOC — VPN Alert</span>
+          <span class="msg-time" id="vpnTime">--:--</span>
+        </div>
+        <div class="msg-body">
+          <div class="msg-title" id="vpnCardTitle">🌐 VPN — Fuera de país</div>
+          <div class="msg-fields">
+            <div class="msg-field"><span class="msg-field-label">*Case ID:*</span><span class="msg-field-value" id="cVCase">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Timestamp:*</span><span class="msg-field-value" id="cVTimestamp">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*User:*</span><span class="msg-field-value" id="cVUser">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Hostname:*</span><span class="msg-field-value" id="cVHostname">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*IP:*</span><span class="msg-field-value" id="cVIp">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*VT Score:*</span><span class="msg-field-value" id="cVVT">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Country:*</span><span class="msg-field-value" id="cVCountry">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Veredicto:*</span><span class="msg-field-value" id="cVVeredicto">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Blacklist:*</span><span class="msg-field-value" id="cVBlacklist">—</span></div>
+          </div>
+        </div>
+        <div class="msg-footer"><span>VPN · Real-time</span><span>SOC</span></div>
+      </div>
+
+      <!-- FILE CARD -->
+      <div class="msg-card hidden" id="cardFile" style="border-left-color:var(--file)">
+        <div class="msg-header msg-header-file">
+          <div class="msg-avatar avatar-file">SOC</div>
+          <span class="msg-sender">SOC — File Alert</span>
+          <span class="msg-time" id="fileTime">--:--</span>
+        </div>
+        <div class="msg-body">
+          <div class="msg-title">📁 Alerta de Archivo</div>
+          <div class="msg-fields">
+            <div class="msg-field"><span class="msg-field-label">*Case ID:*</span><span class="msg-field-value" id="cFCase">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Time Stamp:*</span><span class="msg-field-value" id="cFTimestamp">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Severidad:*</span><span class="msg-field-value" id="cFSev">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Descripción:*</span><span class="msg-field-value" id="cFDesc">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Categoría:*</span><span class="msg-field-value" id="cFCat">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Source:*</span><span class="msg-field-value" id="cFSource">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Host:*</span><span class="msg-field-value" id="cFHost">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*User:*</span><span class="msg-field-value" id="cFUser">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*IP:*</span><span class="msg-field-value" id="cFIp">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Tipo de activo:*</span><span class="msg-field-value" id="cFActivo">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Nombre archivo:*</span><span class="msg-field-value" id="cFNombre">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Ruta:*</span><span class="msg-field-value" id="cFRuta">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Hash:*</span><span class="msg-field-value" id="cFHash">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Líneas de cmd:*</span><span class="msg-field-value" id="cFCmd">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Análisis:*</span><span class="msg-field-value" id="cFAnalisis">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Wildfire:*</span><span class="msg-field-value" id="cFWildfire">—</span></div>
+          </div>
+        </div>
+        <div class="msg-footer"><span>File Alert · Real-time</span><span>SOC</span></div>
+      </div>
+
+      <!-- CONN CARD -->
+      <div class="msg-card hidden" id="cardConn" style="border-left-color:var(--conn)">
+        <div class="msg-header msg-header-conn">
+          <div class="msg-avatar avatar-conn">SOC</div>
+          <span class="msg-sender">SOC — Conexión sospechosa</span>
+          <span class="msg-time" id="connTime">--:--</span>
+        </div>
+        <div class="msg-body">
+          <div class="msg-title">🔌 Conexión sospechosa</div>
+          <div class="msg-fields">
+            <div class="msg-field"><span class="msg-field-label">*Case ID:*</span><span class="msg-field-value" id="cCCase">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Time Stamp:*</span><span class="msg-field-value" id="cCTimestamp">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Descripción:*</span><span class="msg-field-value" id="cCDesc">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Host:*</span><span class="msg-field-value" id="cCHost">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*User:*</span><span class="msg-field-value" id="cCUser">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Tipo de activo:*</span><span class="msg-field-value" id="cCActivo">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*IP Origen:*</span><span class="msg-field-value" id="cCIpOrigen">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*IP Destino:*</span><span class="msg-field-value" id="cCIpDestino">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Dominio:*</span><span class="msg-field-value" id="cCDominio">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*VT Score:*</span><span class="msg-field-value" id="cCVT">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Veredicto:*</span><span class="msg-field-value" id="cCVeredicto">—</span></div>
+          </div>
+        </div>
+        <div class="msg-footer"><span>Conexiones · Real-time</span><span>SOC</span></div>
+      </div>
+
+    </div>
+
+    <div class="plain-preview">
+      <p class="plain-label">Texto plano — listo para pegar en chat</p>
+      <div class="plain-box" id="plainBox">Completa el formulario y presiona "Generar mensaje".</div>
+    </div>
+  </div>
+
+  <script type="module" src="core.js"></script>
+  <script type="module" src="tabs/ad.js"></script>
+  <script type="module" src="tabs/vpn.js"></script>
+  <script type="module" src="tabs/file.js"></script>
+  <script type="module" src="tabs/conn.js"></script>
+</body>
+</html>
