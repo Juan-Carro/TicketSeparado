@@ -6,6 +6,7 @@ import { now, val, setText } from '../core.js';
 
 // Mapeo de ID del input → ID de la tarjeta
 const FIELD_MAP = [
+  ['sCASE-ID',          'cSCASE-ID'],
   ['sTime',          'cSTime'],
   ['sHostname',      'cSHostname'],
   ['sAgentIp',       'cSAgentIp'],
