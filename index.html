@@ -23,6 +23,9 @@
     <div class="tab" id="tabConn" onclick="window.__core.switchTab('conn')">
       <span class="tdot tdot-conn"></span>Conexiones sospechosas
     </div>
+    <div class="tab" id="tabSpei" onclick="window.__core.switchTab('spei')">
+      <span class="tdot tdot-spei"></span>SPEI / SPID
+    </div>
   </div>
 
   <!-- FORM PANEL -->
@@ -163,6 +166,18 @@
       </div>
       <button class="generate-btn btn-conn" onclick="window.__conn.generate()">Generar mensaje ↗</button>
     </div>
+    <!--SPEI FORM--> 
+    <div id="speiForm" class="hidden">
+      <p class="panel-label" style="color:var(--spei)">⬡ SPEI / SPID — Datos del evento</p>
+      <div class="field"><label>Time</label><input id="sTime" type="text" placeholder="2026-05-21 03:47:12 UTC-6"></div>
+      <div class="field"><label>Hostname</label><input id="sHostname" type="text" placeholder="WKSTN-SPEI01"></div>
+      <div class="field"><label>Agent IP Addresses</label><input id="sAgentIp" type="text" placeholder="192.168.1.50, 10.0.0.5"></div>
+      <div class="field"><label>Action Port</label><input id="sPort" type="text" placeholder="443"></div>
+      <div class="field"><label>Logon Type</label><input id="sLogonType" type="text" placeholder="Network (3) / Interactive (2)"></div>
+      <div class="field"><label>Cuenta Loggeada</label><input id="sLoggedAccount" type="text" placeholder="domain\user"></div>
+      <div class="field"><label>Log del Evento</label><textarea id="sEventLog" placeholder="Pegue la descripción del log aquí..."></textarea></div>
+      <button class="generate-btn btn-spei" onclick="window.__spei.generate()">Generar mensaje ↗</button>
+    </div>
 
   </div>
 
@@ -284,6 +299,28 @@
         <div class="msg-footer"><span>Conexiones · Real-time</span><span>SOC</span></div>
       </div>
 
+      <!--SPEI CARD-->
+      <div class="msg-card hidden" id="cardSpei" style="border-left-color:var(--spei)">
+        <div class="msg-header msg-header-spei">
+          <div class="msg-avatar avatar-spei">SOC</div>
+          <span class="msg-sender">SOC — SPEI/SPID Alert</span>
+          <span class="msg-time" id="speiTime">--:--</span>
+        </div>
+        <div class="msg-body">
+          <div class="msg-title">🏦 Alerta SPEI / SPID</div>
+          <div class="msg-fields">
+            <div class="msg-field"><span class="msg-field-label">*Time:*</span><span class="msg-field-value" id="cSTime">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Hostname:*</span><span class="msg-field-value" id="cSHostname">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Agent IP:*</span><span class="msg-field-value" id="cSAgentIp">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Action Port:*</span><span class="msg-field-value" id="cSPort">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Logon Type:*</span><span class="msg-field-value" id="cSLogonType">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Cuenta:*</span><span class="msg-field-value" id="cSLoggedAccount">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Event Log:*</span><span class="msg-field-value" id="cSEventLog">—</span></div>
+          </div>
+        </div>
+        <div class="msg-footer"><span>SPEI/SPID · Real-time</span><span>SOC</span></div>
+      </div>
+
     </div>
 
     <div class="plain-preview">
@@ -297,5 +334,6 @@
   <script type="module" src="tabs/vpn.js"></script>
   <script type="module" src="tabs/file.js"></script>
   <script type="module" src="tabs/conn.js"></script>
+  <script type="module" src="tabs/spei.js"></script>
 </body>
 </html>

@@ -2,13 +2,14 @@
 // core.js — Tab registry + shared utilities
 // ─────────────────────────────────────────────
 
-const TAB_IDS = ['ad', 'vpn', 'file', 'conn'];
+const TAB_IDS = ['ad', 'vpn', 'file', 'conn', 'spei'];
 
 const TAB_META = {
   ad:   { label: 'AD',                   cls: 'active-ad'   },
   vpn:  { label: 'VPN',                  cls: 'active-vpn'  },
   file: { label: 'Archivos',             cls: 'active-file' },
   conn: { label: 'Conexiones sospechosas', cls: 'active-conn' },
+  spei: { label: 'SPEI / SPID',          cls: 'active-spei' },
 };
 
 // ── Shared helpers ──────────────────────────
@@ -50,12 +51,14 @@ function switchTab(tab) {
   document.getElementById('cardVPN').classList.toggle('hidden',  tab !== 'vpn');
   document.getElementById('cardFile').classList.toggle('hidden', tab !== 'file');
   document.getElementById('cardConn').classList.toggle('hidden', tab !== 'conn');
+  document.getElementById('cardSpei').classList.toggle('hidden', tab !== 'spei');
 
   // Form IDs
   document.getElementById('adForm').classList.toggle('hidden',   tab !== 'ad');
   document.getElementById('vpnForm').classList.toggle('hidden',  tab !== 'vpn');
   document.getElementById('fileForm').classList.toggle('hidden', tab !== 'file');
   document.getElementById('connForm').classList.toggle('hidden', tab !== 'conn');
+  document.getElementById('speiForm').classList.toggle('hidden', tab !== 'spei');
 
   // Tab styles
   TAB_IDS.forEach(t => {
@@ -67,6 +70,7 @@ function switchTab(tab) {
   document.getElementById('tabVPN').className  = 'tab' + (tab === 'vpn'  ? ' active-vpn'  : '');
   document.getElementById('tabFile').className = 'tab' + (tab === 'file' ? ' active-file' : '');
   document.getElementById('tabConn').className = 'tab' + (tab === 'conn' ? ' active-conn' : '');
+  document.getElementById('tabSpei').className = 'tab' + (tab === 'spei' ? ' active-spei' : '');
 
   document.getElementById('previewLabel').textContent =
     '⬡ Vista previa — ' + TAB_META[tab].label;
@@ -90,9 +94,10 @@ function copyPlain() {
 // ── Init timestamps ──────────────────────────
 
 function initTimes() {
-  ['adTime', 'vpnTime', 'fileTime', 'connTime'].forEach(id => {
+  ['adTime', 'vpnTime', 'fileTime', 'connTime', 'speiTime'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.textContent = now();
+
   });
 }
 
