@@ -12,6 +12,15 @@ const TAB_META = {
   spei: { label: 'SPEI / SPID',          cls: 'active-spei' },
 };
 
+// Mapeo explícito de tab ID → IDs reales en el DOM
+const DOM_IDS = {
+  ad:   { form: 'adForm',   card: 'cardAD',   tab: 'tabAD'   },
+  vpn:  { form: 'vpnForm',  card: 'cardVPN',  tab: 'tabVPN'  },
+  file: { form: 'fileForm', card: 'cardFile', tab: 'tabFile' },
+  conn: { form: 'connForm', card: 'cardConn', tab: 'tabConn' },
+  spei: { form: 'speiForm', card: 'cardSpei', tab: 'tabSpei' },
+};
+
 // ── Shared helpers ──────────────────────────
 
 export const now = () =>
@@ -41,40 +50,26 @@ export const vtColor = n =>
 
 function switchTab(tab) {
   TAB_IDS.forEach(t => {
-    document.getElementById(t + 'Form').classList.toggle('hidden', t !== tab);
-    document.getElementById('card' + t.toUpperCase().replace('FILE','File').replace('CONN','Conn').replace('AD','AD').replace('VPN','VPN'))
-      .classList.toggle('hidden', t !== tab);
+    const ids = DOM_IDS[t];
+
+    // Formularios
+    const form = document.getElementById(ids.form);
+    if (form) form.classList.toggle('hidden', t !== tab);
+
+    // Cards de preview
+    const card = document.getElementById(ids.card);
+    if (card) card.classList.toggle('hidden', t !== tab);
+
+    // Estilos del tab selector
+    const tabEl = document.getElementById(ids.tab);
+    if (tabEl) tabEl.className = 'tab' + (t === tab ? ` ${TAB_META[t].cls}` : '');
   });
 
-  // Card IDs use specific casing — handle explicitly
-  document.getElementById('cardAD').classList.toggle('hidden',   tab !== 'ad');
-  document.getElementById('cardVPN').classList.toggle('hidden',  tab !== 'vpn');
-  document.getElementById('cardFile').classList.toggle('hidden', tab !== 'file');
-  document.getElementById('cardConn').classList.toggle('hidden', tab !== 'conn');
-  document.getElementById('cardSpei').classList.toggle('hidden', tab !== 'spei');
-
-  // Form IDs
-  document.getElementById('adForm').classList.toggle('hidden',   tab !== 'ad');
-  document.getElementById('vpnForm').classList.toggle('hidden',  tab !== 'vpn');
-  document.getElementById('fileForm').classList.toggle('hidden', tab !== 'file');
-  document.getElementById('connForm').classList.toggle('hidden', tab !== 'conn');
-  document.getElementById('speiForm').classList.toggle('hidden', tab !== 'spei');
-
-  // Tab styles
-  TAB_IDS.forEach(t => {
-    const el = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
-    if (el) el.className = 'tab' + (t === tab ? ` ${TAB_META[t].cls}` : '');
-  });
-  // Explicit uppercase tab IDs
-  document.getElementById('tabAD').className   = 'tab' + (tab === 'ad'   ? ' active-ad'   : '');
-  document.getElementById('tabVPN').className  = 'tab' + (tab === 'vpn'  ? ' active-vpn'  : '');
-  document.getElementById('tabFile').className = 'tab' + (tab === 'file' ? ' active-file' : '');
-  document.getElementById('tabConn').className = 'tab' + (tab === 'conn' ? ' active-conn' : '');
-  document.getElementById('tabSpei').className = 'tab' + (tab === 'spei' ? ' active-spei' : '');
-
+  // Etiqueta del panel de preview
   document.getElementById('previewLabel').textContent =
     '⬡ Vista previa — ' + TAB_META[tab].label;
 
+  // Limpiar plainBox al cambiar de tab
   document.getElementById('plainBox').textContent =
     'Completa el formulario y presiona "Generar mensaje".';
 }
@@ -97,7 +92,6 @@ function initTimes() {
   ['adTime', 'vpnTime', 'fileTime', 'connTime', 'speiTime'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.textContent = now();
-
   });
 }
 
