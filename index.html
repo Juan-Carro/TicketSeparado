@@ -169,6 +169,7 @@
     <!--SPEI FORM--> 
     <div id="speiForm" class="hidden">
       <p class="panel-label" style="color:var(--spei)">⬡ SPEI / SPID — Datos del evento</p>
+      <div class="field"><label>Case-ID</label><input id="sCase-ID" type="text" placeholder="ID del caso aqui"></div>
       <div class="field"><label>Time</label><input id="sTime" type="text" placeholder="2026-05-21 03:47:12 UTC-6"></div>
       <div class="field"><label>Hostname</label><input id="sHostname" type="text" placeholder="WKSTN-SPEI01"></div>
       <div class="field"><label>Agent IP Addresses</label><input id="sAgentIp" type="text" placeholder="192.168.1.50, 10.0.0.5"></div>
@@ -309,6 +310,7 @@
         <div class="msg-body">
           <div class="msg-title">🏦 Alerta SPEI / SPID</div>
           <div class="msg-fields">
+            <div class="msg-field"><span class="msg-field-label">*Case-ID:*</span><span class="msg-field-value" id="cSTime">—</span></div>
             <div class="msg-field"><span class="msg-field-label">*Time:*</span><span class="msg-field-value" id="cSTime">—</span></div>
             <div class="msg-field"><span class="msg-field-label">*Hostname:*</span><span class="msg-field-value" id="cSHostname">—</span></div>
             <div class="msg-field"><span class="msg-field-label">*Agent IP:*</span><span class="msg-field-value" id="cSAgentIp">—</span></div>
