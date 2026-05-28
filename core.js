@@ -2,13 +2,14 @@
 // core.js — Tab registry + shared utilities
 // ─────────────────────────────────────────────
 
-const TAB_IDS = ['ad', 'vpn', 'file', 'conn'];
+const TAB_IDS = ['ad', 'vpn', 'file', 'conn', 'speid'];
 
 const TAB_META = {
   ad:   { label: 'AD',                   cls: 'active-ad'   },
   vpn:  { label: 'VPN',                  cls: 'active-vpn'  },
   file: { label: 'Archivos',             cls: 'active-file' },
   conn: { label: 'Conexiones sospechosas', cls: 'active-conn' },
+  speid: { label: 'SPEID / SPID',        cls: 'active-spei'}
 };
 
 // ── Shared helpers ──────────────────────────
@@ -50,6 +51,7 @@ function switchTab(tab) {
   document.getElementById('cardVPN').classList.toggle('hidden',  tab !== 'vpn');
   document.getElementById('cardFile').classList.toggle('hidden', tab !== 'file');
   document.getElementById('cardConn').classList.toggle('hidden', tab !== 'conn');
+  
 
   // Form IDs
   document.getElementById('adForm').classList.toggle('hidden',   tab !== 'ad');
@@ -67,6 +69,7 @@ function switchTab(tab) {
   document.getElementById('tabVPN').className  = 'tab' + (tab === 'vpn'  ? ' active-vpn'  : '');
   document.getElementById('tabFile').className = 'tab' + (tab === 'file' ? ' active-file' : '');
   document.getElementById('tabConn').className = 'tab' + (tab === 'conn' ? ' active-conn' : '');
+  document.getElementById('tabSpei').className = 'tab' + (tab === 'spei' ? ' active-spei' : '');
 
   document.getElementById('previewLabel').textContent =
     '⬡ Vista previa — ' + TAB_META[tab].label;

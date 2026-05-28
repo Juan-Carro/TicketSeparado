@@ -8,6 +8,7 @@
   --vpn: #00c9a7;
   --file: #f59e0b;
   --conn: #a78bfa;
+  --spei: #ec4899;
   --green: #2ecc71;
   --text: #e8eaf0;
   --muted: #7a809a;
@@ -55,12 +56,14 @@ body {
 .tab.active-vpn  { color: var(--vpn);    border-bottom-color: var(--vpn); }
 .tab.active-file { color: var(--file);   border-bottom-color: var(--file); }
 .tab.active-conn { color: var(--conn);   border-bottom-color: var(--conn); }
+.tab.active-spei { color: var(--spei); border-bottom-color: var(--spei); }
 
 .tdot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 .tdot-ad   { background: var(--accent); }
 .tdot-vpn  { background: var(--vpn); }
 .tdot-file { background: var(--file); }
 .tdot-conn { background: var(--conn); }
+.tdot-spei { background: var(--spei); }
 
 /* ── PANELS ── */
 .form-panel {
@@ -202,6 +205,7 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); }
 .btn-vpn  { background: var(--vpn); }
 .btn-file { background: var(--file); }
 .btn-conn { background: var(--conn); }
+.btn-spei { background: var(--spei); color: #fff; }
 
 /* ── PREVIEW ── */
 .preview-top {
