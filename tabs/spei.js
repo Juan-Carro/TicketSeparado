@@ -26,6 +26,7 @@ function generate() {
   const lines = [
     `🏦 *[SPEI / SPID ALERT]*`,
     `*Time:* ${val('sTime')}`,
+    `*Case-ID:* ${val('sCase-ID')}`,
     `*Hostname:* ${val('sHostname')}`,
     `*Agent IP Addresses:* ${val('sAgentIp')}`,
     `*Action Port:* ${val('sPort')}`,
