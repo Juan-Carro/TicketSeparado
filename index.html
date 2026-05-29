@@ -11,19 +11,19 @@
 
   <!-- TABS -->
   <div class="tab-bar">
-    <div class="tab active-ad" id="tabAD" onclick="window.__core.switchTab('ad')">
+    <div class="tab active-ad" id="tabAD" onclick="SOC.switchTab('ad')">
       <span class="tdot tdot-ad"></span>AD On-Prem
     </div>
-    <div class="tab" id="tabVPN" onclick="window.__core.switchTab('vpn')">
+    <div class="tab" id="tabVPN" onclick="SOC.switchTab('vpn')">
       <span class="tdot tdot-vpn"></span>VPN
     </div>
-    <div class="tab" id="tabFile" onclick="window.__core.switchTab('file')">
+    <div class="tab" id="tabFile" onclick="SOC.switchTab('file')">
       <span class="tdot tdot-file"></span>Archivos
     </div>
-    <div class="tab" id="tabConn" onclick="window.__core.switchTab('conn')">
+    <div class="tab" id="tabConn" onclick="SOC.switchTab('conn')">
       <span class="tdot tdot-conn"></span>Conexiones sospechosas
     </div>
-    <div class="tab" id="tabSpei" onclick="window.__core.switchTab('spei')">
+    <div class="tab" id="tabSpei" onclick="SOC.switchTab('spei')">
       <span class="tdot tdot-spei"></span>SPEI / SPID
     </div>
   </div>
@@ -37,11 +37,11 @@
       <div class="field">
         <label>Tipo de evento</label>
         <div class="tipo-grid">
-          <button class="tipo-btn active" data-tipo="Cuenta deshabilitada" onclick="window.__ad.selectTipo(this)"><span class="dot2"></span>Cuenta deshabilitada</button>
-          <button class="tipo-btn" data-tipo="Cuenta creada" onclick="window.__ad.selectTipo(this)"><span class="dot2"></span>Cuenta creada</button>
-          <button class="tipo-btn" data-tipo="Cuenta eliminada" onclick="window.__ad.selectTipo(this)"><span class="dot2"></span>Cuenta eliminada</button>
-          <button class="tipo-btn" data-tipo="Password reset" onclick="window.__ad.selectTipo(this)"><span class="dot2"></span>Password reset</button>
-          <button class="tipo-btn" data-tipo="Adición a grupo admin" onclick="window.__ad.selectTipo(this)" style="grid-column:1/-1"><span class="dot2"></span>Adición a grupo admin</button>
+          <button class="tipo-btn active" data-tipo="Cuenta deshabilitada" onclick="SOC.ad.selectTipo(this)"><span class="dot2"></span>Cuenta deshabilitada</button>
+          <button class="tipo-btn" data-tipo="Cuenta creada" onclick="SOC.ad.selectTipo(this)"><span class="dot2"></span>Cuenta creada</button>
+          <button class="tipo-btn" data-tipo="Cuenta eliminada" onclick="SOC.ad.selectTipo(this)"><span class="dot2"></span>Cuenta eliminada</button>
+          <button class="tipo-btn" data-tipo="Password reset" onclick="SOC.ad.selectTipo(this)"><span class="dot2"></span>Password reset</button>
+          <button class="tipo-btn" data-tipo="Adición a grupo admin" onclick="SOC.ad.selectTipo(this)" style="grid-column:1/-1"><span class="dot2"></span>Adición a grupo admin</button>
         </div>
       </div>
       <div class="field hidden" id="grupoField">
@@ -64,7 +64,7 @@
       <div class="field"><label>Hostname</label><input id="adHostname" type="text" placeholder="WKSTN-B03259"></div>
       <div class="field"><label>Usuario afectado</label><input id="adAfectadoUser" type="text" placeholder="nombre.apellido"></div>
       <div class="field"><label>ID Usuario afectado / SID</label><input id="adAfectadoId" type="text" placeholder="B02373  o  S-1-5-21-XXXX"></div>
-      <button class="generate-btn btn-ad" onclick="window.__ad.generate()">Generar mensaje ↗</button>
+      <button class="generate-btn btn-ad" onclick="SOC.ad.generate()">Generar mensaje ↗</button>
     </div>
 
     <!-- VPN FORM -->
@@ -73,9 +73,9 @@
       <div class="field">
         <label>Motivo</label>
         <div class="subtipo-grid">
-          <button class="sbtn active" onclick="window.__vpn.selectMotivo(this,'Fuera de país')">🌍 Fuera de país</button>
-          <button class="sbtn" onclick="window.__vpn.selectMotivo(this,'Fuera de horario')">🕐 Fuera de horario</button>
-          <button class="sbtn" onclick="window.__vpn.selectMotivo(this,'Fuera de país + horario')">⚡ Ambas</button>
+          <button class="sbtn active" onclick="SOC.vpn.selectMotivo(this,'Fuera de país')">🌍 Fuera de país</button>
+          <button class="sbtn" onclick="SOC.vpn.selectMotivo(this,'Fuera de horario')">🕐 Fuera de horario</button>
+          <button class="sbtn" onclick="SOC.vpn.selectMotivo(this,'Fuera de país + horario')">⚡ Ambas</button>
         </div>
       </div>
       <div class="field"><label>Case ID</label><input id="vCaseId" type="text" placeholder="CASE-2026-XXXX"></div>
@@ -86,21 +86,21 @@
       <div class="field">
         <label>VT Score</label>
         <div class="vt-row">
-          <input id="vtScore" type="number" min="0" max="90" value="0" placeholder="0" oninput="window.__vpn.updateVT(this.value)">
+          <input id="vtScore" type="number" min="0" max="90" value="0" placeholder="0" oninput="SOC.vpn.updateVT(this.value)">
           <span class="vt-display" id="vtDisplay" style="color:#86efac">0 / 90</span>
         </div>
       </div>
-      <div class="field"><label>Country (out of Mexico)</label><input id="vCountry" type="text" placeholder="Ej. Russia, China..."></div>
+      <div class="field" id="vCountryField"><label>Country (out of Mexico)</label><input id="vCountry" type="text" placeholder="Ej. Russia, China..."></div>
       <div class="field">
         <label>Veredicto</label>
         <div class="veredicto-grid" id="vpnVeredictoGrid">
-          <button class="vbtn v-benigna"    onclick="window.__vpn.selectVeredicto(this,'benigna')">✅ Benigna</button>
-          <button class="vbtn v-sospechosa" onclick="window.__vpn.selectVeredicto(this,'sospechosa')">⚠️ Sospechosa</button>
-          <button class="vbtn v-maliciosa"  onclick="window.__vpn.selectVeredicto(this,'maliciosa')">🚨 Maliciosa</button>
+          <button class="vbtn v-benigna"    onclick="SOC.vpn.selectVeredicto(this,'benigna')">✅ Benigna</button>
+          <button class="vbtn v-sospechosa" onclick="SOC.vpn.selectVeredicto(this,'sospechosa')">⚠️ Sospechosa</button>
+          <button class="vbtn v-maliciosa"  onclick="SOC.vpn.selectVeredicto(this,'maliciosa')">🚨 Maliciosa</button>
         </div>
       </div>
       <div class="field"><label>Blacklist</label><input id="vBlacklist" type="text" placeholder="Sí / No / Nombre de la lista"></div>
-      <button class="generate-btn btn-vpn" onclick="window.__vpn.generate()">Generar mensaje ↗</button>
+      <button class="generate-btn btn-vpn" onclick="SOC.vpn.generate()">Generar mensaje ↗</button>
     </div>
 
     <!-- FILE FORM -->
@@ -134,7 +134,7 @@
           <option>Grayware</option><option>Phishing</option><option>Desconocido</option>
         </select>
       </div>
-      <button class="generate-btn btn-file" onclick="window.__file.generate()">Generar mensaje ↗</button>
+      <button class="generate-btn btn-file" onclick="SOC.file.generate()">Generar mensaje ↗</button>
     </div>
 
     <!-- CONN FORM -->
@@ -152,32 +152,32 @@
       <div class="field">
         <label>VT Score</label>
         <div class="vt-row">
-          <input id="cVtScore" type="number" min="0" max="90" value="0" placeholder="0" oninput="window.__conn.updateVT(this.value)">
+          <input id="cVtScore" type="number" min="0" max="90" value="0" placeholder="0" oninput="SOC.conn.updateVT(this.value)">
           <span class="vt-display" id="cVtDisplay" style="color:#86efac">0 / 90</span>
         </div>
       </div>
       <div class="field">
         <label>Veredicto</label>
         <div class="veredicto-grid" id="connVeredictoGrid">
-          <button class="vbtn v-conocida"   onclick="window.__conn.selectVeredicto(this,'conocida')">✅ Conocida</button>
-          <button class="vbtn v-sospechosa" onclick="window.__conn.selectVeredicto(this,'sospechosa')">⚠️ Sospechosa</button>
-          <button class="vbtn v-maliciosa"  onclick="window.__conn.selectVeredicto(this,'maliciosa')">🚨 Maliciosa</button>
+          <button class="vbtn v-conocida"   onclick="SOC.conn.selectVeredicto(this,'conocida')">✅ Conocida</button>
+          <button class="vbtn v-sospechosa" onclick="SOC.conn.selectVeredicto(this,'sospechosa')">⚠️ Sospechosa</button>
+          <button class="vbtn v-maliciosa"  onclick="SOC.conn.selectVeredicto(this,'maliciosa')">🚨 Maliciosa</button>
         </div>
       </div>
-      <button class="generate-btn btn-conn" onclick="window.__conn.generate()">Generar mensaje ↗</button>
+      <button class="generate-btn btn-conn" onclick="SOC.conn.generate()">Generar mensaje ↗</button>
     </div>
-    <!--SPEI FORM--> 
+
+    <!-- SPEI FORM -->
     <div id="speiForm" class="hidden">
       <p class="panel-label" style="color:var(--spei)">⬡ SPEI / SPID — Datos del evento</p>
-      <div class="field"><label>Case-ID</label><input id="sCase-ID" type="text" placeholder="ID del caso aqui"></div>
-      <div class="field"><label>Time</label><input id="sTime" type="text" placeholder="2026-05-21 03:47:12 UTC-6"></div>
-      <div class="field"><label>Hostname</label><input id="sHostname" type="text" placeholder="WKSTN-SPEI01"></div>
-      <div class="field"><label>Agent IP Addresses</label><input id="sAgentIp" type="text" placeholder="192.168.1.50, 10.0.0.5"></div>
-      <div class="field"><label>Action Port</label><input id="sPort" type="text" placeholder="443"></div>
-      <div class="field"><label>Logon Type</label><input id="sLogonType" type="text" placeholder="Network (3) / Interactive (2)"></div>
-      <div class="field"><label>Cuenta Loggeada</label><input id="sLoggedAccount" type="text" placeholder="domain\user"></div>
-      <div class="field"><label>Log del Evento</label><textarea id="sEventLog" placeholder="Pegue la descripción del log aquí..."></textarea></div>
-      <button class="generate-btn btn-spei" onclick="window.__spei.generate()">Generar mensaje ↗</button>
+      <div class="field"><label>Agent IP Address</label><input id="spAgentIp" type="text" placeholder="10.0.0.1 / 203.0.113.45"></div>
+      <div class="field"><label>Action Port</label><input id="spActionPort" type="text" placeholder="443, 8080, 3389..."></div>
+      <div class="field"><label>Logon Type</label><input id="spLogonType" type="text" placeholder="Ej. 3 - Network, 10 - RemoteInteractive..."></div>
+      <div class="field"><label>Cuenta loggeada</label><input id="spCuenta" type="text" placeholder="nombre.apellido / B03259"></div>
+      <div class="field"><label>Log del evento</label><textarea id="spLogEvento" placeholder="ID de evento o descripción del log..."></textarea></div>
+      <div class="field"><label>Hostname</label><input id="spHostname" type="text" placeholder="WKSTN-B03259"></div>
+      <div class="field"><label>Time</label><input id="spTime" type="text" placeholder="2026-05-21 03:47:12 UTC-6"></div>
+      <button class="generate-btn btn-spei" onclick="SOC.spei.generate()">Generar mensaje ↗</button>
     </div>
 
   </div>
@@ -188,7 +188,7 @@
       <p class="panel-label" id="previewLabel">⬡ Vista previa — AD</p>
       <div style="display:flex;align-items:center">
         <span class="copied-msg" id="copiedMsg">¡Copiado!</span>
-        <button class="copy-btn" onclick="window.__core.copyPlain()">Copiar texto plano</button>
+        <button class="copy-btn" onclick="SOC.copyPlain()">Copiar texto plano</button>
       </div>
     </div>
 
@@ -235,7 +235,7 @@
             <div class="msg-field"><span class="msg-field-label">*Hostname:*</span><span class="msg-field-value" id="cVHostname">—</span></div>
             <div class="msg-field"><span class="msg-field-label">*IP:*</span><span class="msg-field-value" id="cVIp">—</span></div>
             <div class="msg-field"><span class="msg-field-label">*VT Score:*</span><span class="msg-field-value" id="cVVT">—</span></div>
-            <div class="msg-field"><span class="msg-field-label">*Country:*</span><span class="msg-field-value" id="cVCountry">—</span></div>
+            <div class="msg-field" id="cVCountryRow"><span class="msg-field-label">*Country:*</span><span class="msg-field-value" id="cVCountry">—</span></div>
             <div class="msg-field"><span class="msg-field-label">*Veredicto:*</span><span class="msg-field-value" id="cVVeredicto">—</span></div>
             <div class="msg-field"><span class="msg-field-label">*Blacklist:*</span><span class="msg-field-value" id="cVBlacklist">—</span></div>
           </div>
@@ -300,24 +300,23 @@
         <div class="msg-footer"><span>Conexiones · Real-time</span><span>SOC</span></div>
       </div>
 
-      <!--SPEI CARD-->
+      <!-- SPEI CARD -->
       <div class="msg-card hidden" id="cardSpei" style="border-left-color:var(--spei)">
-        <div class="msg-header msg-header-spei">
+        <div class="msg-header" style="background:rgba(244,63,94,.07)">
           <div class="msg-avatar avatar-spei">SOC</div>
-          <span class="msg-sender">SOC — SPEI/SPID Alert</span>
+          <span class="msg-sender">SOC — SPEI / SPID Alert</span>
           <span class="msg-time" id="speiTime">--:--</span>
         </div>
         <div class="msg-body">
-          <div class="msg-title">🏦 Alerta SPEI / SPID</div>
+          <div class="msg-title">🏦 SPEI / SPID Alert</div>
           <div class="msg-fields">
-            <div class="msg-field"><span class="msg-field-label">*Case-ID:*</span><span class="msg-field-value" id="cSTime">—</span></div>
-            <div class="msg-field"><span class="msg-field-label">*Time:*</span><span class="msg-field-value" id="cSTime">—</span></div>
-            <div class="msg-field"><span class="msg-field-label">*Hostname:*</span><span class="msg-field-value" id="cSHostname">—</span></div>
-            <div class="msg-field"><span class="msg-field-label">*Agent IP:*</span><span class="msg-field-value" id="cSAgentIp">—</span></div>
-            <div class="msg-field"><span class="msg-field-label">*Action Port:*</span><span class="msg-field-value" id="cSPort">—</span></div>
-            <div class="msg-field"><span class="msg-field-label">*Logon Type:*</span><span class="msg-field-value" id="cSLogonType">—</span></div>
-            <div class="msg-field"><span class="msg-field-label">*Cuenta:*</span><span class="msg-field-value" id="cSLoggedAccount">—</span></div>
-            <div class="msg-field"><span class="msg-field-label">*Event Log:*</span><span class="msg-field-value" id="cSEventLog">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Agent IP:*</span><span class="msg-field-value" id="cSpAgentIp">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Action Port:*</span><span class="msg-field-value" id="cSpActionPort">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Logon Type:*</span><span class="msg-field-value" id="cSpLogonType">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Cuenta loggeada:*</span><span class="msg-field-value" id="cSpCuenta">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Log del evento:*</span><span class="msg-field-value" id="cSpLogEvento">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Hostname:*</span><span class="msg-field-value" id="cSpHostname">—</span></div>
+            <div class="msg-field"><span class="msg-field-label">*Time:*</span><span class="msg-field-value" id="cSpTime">—</span></div>
           </div>
         </div>
         <div class="msg-footer"><span>SPEI/SPID · Real-time</span><span>SOC</span></div>
@@ -331,11 +330,6 @@
     </div>
   </div>
 
-  <script type="module" src="core.js"></script>
-  <script type="module" src="tabs/ad.js"></script>
-  <script type="module" src="tabs/vpn.js"></script>
-  <script type="module" src="tabs/file.js"></script>
-  <script type="module" src="tabs/conn.js"></script>
-  <script type="module" src="tabs/spei.js"></script>
+  <script type="module" src="main.js"></script>
 </body>
 </html>

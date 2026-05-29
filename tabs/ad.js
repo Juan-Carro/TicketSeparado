@@ -1,34 +1,24 @@
-// ─────────────────────────────────────────────
-// tabs/ad.js — AD On-Prem tab logic
-// ─────────────────────────────────────────────
-
+// tabs/ad.js — AD On-Prem
 import { now, val, setText } from '../core.js';
 
 let selectedTipo = 'Cuenta deshabilitada';
 
-// ── Tipo selector ────────────────────────────
-
-function selectTipo(el) {
+export function selectTipo(el) {
   document.querySelectorAll('#adForm .tipo-btn').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
   selectedTipo = el.dataset.tipo;
-
   const isGrupo = selectedTipo === 'Adición a grupo admin';
   document.getElementById('grupoField').classList.toggle('hidden', !isGrupo);
   document.getElementById('cAdGrupoRow').classList.toggle('hidden', !isGrupo);
 }
 
-// ── Generate ─────────────────────────────────
-
-function generate() {
+export function generate() {
   const sev     = document.getElementById('adSev').value;
   const isGrupo = selectedTipo === 'Adición a grupo admin';
 
-  // Update card header
   document.getElementById('adTime').textContent      = now();
   document.getElementById('adCardTitle').textContent = `*[AD ALERT — ${sev}]*`;
 
-  // Update card fields
   setText('cAdEvento',    selectedTipo);
   setText('cAdTimestamp', val('adTimestamp'));
   setText('cAdDesc',      val('adDesc'));
@@ -38,12 +28,10 @@ function generate() {
   setText('cAdHostname',  val('adHostname'));
   setText('cAdAfUser',    val('adAfectadoUser'));
   setText('cAdAfId',      val('adAfectadoId'));
-
   document.getElementById('cAdGrupoRow').classList.toggle('hidden', !isGrupo);
   setText('cAdGrupo', isGrupo ? val('adGrupo') : '—');
 
-  // Build plain text
-  const lines = [
+  document.getElementById('plainBox').textContent = [
     `*[AD ALERT — ${sev}]*`,
     `*Evento:* ${selectedTipo}`,
     `*Timestamp:* ${val('adTimestamp')}`,
@@ -56,10 +44,4 @@ function generate() {
     `*ID / SID:* ${val('adAfectadoId')}`,
     isGrupo ? `*Grupo:* ${val('adGrupo')}` : null,
   ].filter(Boolean).join('\n');
-
-  document.getElementById('plainBox').textContent = lines;
 }
-
-// ── Expose globally ──────────────────────────
-
-window.__ad = { selectTipo, generate };

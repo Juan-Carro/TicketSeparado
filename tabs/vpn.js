@@ -1,42 +1,35 @@
-// ─────────────────────────────────────────────
-// tabs/vpn.js — VPN tab logic
-// ─────────────────────────────────────────────
-
+// tabs/vpn.js — VPN
 import { now, val, setText, veredictoLabel, vtColor } from '../core.js';
 
-let selectedMotivo   = 'Fuera de país';
+let selectedMotivo    = 'Fuera de país';
 let selectedVeredicto = '';
 
-// ── Motivo selector ──────────────────────────
-
-function selectMotivo(el, motivo) {
+export function selectMotivo(el, motivo) {
   document.querySelectorAll('#vpnForm .sbtn').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
   selectedMotivo = motivo;
+  const soloHorario = motivo === 'Fuera de horario';
+  document.getElementById('vCountryField').classList.toggle('hidden', soloHorario);
+  document.getElementById('cVCountryRow').classList.toggle('hidden', soloHorario);
 }
 
-// ── Veredicto selector ───────────────────────
-
-function selectVeredicto(el, v) {
+export function selectVeredicto(el, v) {
   document.querySelectorAll('#vpnVeredictoGrid .vbtn').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
   selectedVeredicto = v;
 }
 
-// ── VT Score display ─────────────────────────
-
-function updateVT(v) {
+export function updateVT(v) {
   const n  = parseInt(v) || 0;
   const el = document.getElementById('vtDisplay');
   el.textContent = `${n} / 90`;
   el.style.color = vtColor(n);
 }
 
-// ── Generate ─────────────────────────────────
-
-function generate() {
-  const vt = document.getElementById('vtScore').value || '0';
-  const vl = veredictoLabel(selectedVeredicto);
+export function generate() {
+  const vt          = document.getElementById('vtScore').value || '0';
+  const vl          = veredictoLabel(selectedVeredicto);
+  const soloHorario = selectedMotivo === 'Fuera de horario';
 
   document.getElementById('vpnTime').textContent      = now();
   document.getElementById('vpnCardTitle').textContent = `🌐 VPN — ${selectedMotivo}`;
@@ -47,11 +40,12 @@ function generate() {
   setText('cVHostname',  val('vHostname'));
   setText('cVIp',        val('vIp'));
   setText('cVVT',        `${vt} / 90`);
-  setText('cVCountry',   `${val('vCountry')} 🚩`);
   setText('cVVeredicto', vl);
   setText('cVBlacklist', val('vBlacklist'));
+  document.getElementById('cVCountryRow').classList.toggle('hidden', soloHorario);
+  if (!soloHorario) setText('cVCountry', `${val('vCountry')} 🚩`);
 
-  const lines = [
+  document.getElementById('plainBox').textContent = [
     `🌐 *[VPN ALERT — ${selectedMotivo.toUpperCase()}]*`,
     `*Case ID:* ${val('vCaseId')}`,
     `*Timestamp:* ${val('vTimestamp')}`,
@@ -59,14 +53,8 @@ function generate() {
     `*Hostname:* ${val('vHostname')}`,
     `*IP:* ${val('vIp')}`,
     `*VT Score:* ${vt} / 90`,
-    `*Country:* ${val('vCountry')} 🚩 (Out of Mexico)`,
+    !soloHorario ? `*Country:* ${val('vCountry')} 🚩 (Out of Mexico)` : null,
     `*Veredicto:* ${vl}`,
     `*Blacklist:* ${val('vBlacklist')}`,
-  ].join('\n');
-
-  document.getElementById('plainBox').textContent = lines;
+  ].filter(Boolean).join('\n');
 }
-
-// ── Expose globally ──────────────────────────
-
-window.__vpn = { selectMotivo, selectVeredicto, updateVT, generate };

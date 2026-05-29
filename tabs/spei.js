@@ -1,43 +1,25 @@
-// ─────────────────────────────────────────────
-// tabs/spei.js — SPEI/SPID tab logic
-// ─────────────────────────────────────────────
-
+// tabs/spei.js — SPEI / SPID
 import { now, val, setText } from '../core.js';
 
-// Mapeo de ID del input → ID de la tarjeta
-const FIELD_MAP = [
-  ['sCASE-ID',          'cSCASE-ID'],
-  ['sTime',          'cSTime'],
-  ['sHostname',      'cSHostname'],
-  ['sAgentIp',       'cSAgentIp'],
-  ['sPort',          'cSPort'],
-  ['sLogonType',     'cSLogonType'],
-  ['sLoggedAccount', 'cSLoggedAccount'],
-  ['sEventLog',      'cSEventLog'],
-];
-
-// ── Generate ─────────────────────────────────
-
-function generate() {
+export function generate() {
   document.getElementById('speiTime').textContent = now();
 
-  FIELD_MAP.forEach(([inputId, cardId]) => setText(cardId, val(inputId)));
+  setText('cSpAgentIp',    val('spAgentIp'));
+  setText('cSpActionPort', val('spActionPort'));
+  setText('cSpLogonType',  val('spLogonType'));
+  setText('cSpCuenta',     val('spCuenta'));
+  setText('cSpLogEvento',  val('spLogEvento'));
+  setText('cSpHostname',   val('spHostname'));
+  setText('cSpTime',       val('spTime'));
 
-  const lines = [
-    `🏦 *[SPEI / SPID ALERT]*`,
-    `*Time:* ${val('sTime')}`,
-    `*Case-ID:* ${val('sCase-ID')}`,
-    `*Hostname:* ${val('sHostname')}`,
-    `*Agent IP Addresses:* ${val('sAgentIp')}`,
-    `*Action Port:* ${val('sPort')}`,
-    `*Logon Type:* ${val('sLogonType')}`,
-    `*Cuenta Loggeada:* ${val('sLoggedAccount')}`,
-    `*Log del Evento:* ${val('sEventLog')}`,
+  document.getElementById('plainBox').textContent = [
+    `🏦 *[SPEI/SPID ALERT]*`,
+    `*Agent IP Address:* ${val('spAgentIp')}`,
+    `*Action Port:* ${val('spActionPort')}`,
+    `*Logon Type:* ${val('spLogonType')}`,
+    `*Cuenta loggeada:* ${val('spCuenta')}`,
+    `*Log del evento:* ${val('spLogEvento')}`,
+    `*Hostname:* ${val('spHostname')}`,
+    `*Time:* ${val('spTime')}`,
   ].join('\n');
-
-  document.getElementById('plainBox').textContent = lines;
 }
-
-// ── Expose globally ──────────────────────────
-
-window.__spei = { generate };

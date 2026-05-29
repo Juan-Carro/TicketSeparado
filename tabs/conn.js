@@ -1,31 +1,22 @@
-// ─────────────────────────────────────────────
-// tabs/conn.js — Conexiones sospechosas logic
-// ─────────────────────────────────────────────
-
+// tabs/conn.js — Conexiones sospechosas
 import { now, val, setText, veredictoLabel, vtColor } from '../core.js';
 
 let selectedVeredicto = '';
 
-// ── Veredicto selector ───────────────────────
-
-function selectVeredicto(el, v) {
+export function selectVeredicto(el, v) {
   document.querySelectorAll('#connVeredictoGrid .vbtn').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
   selectedVeredicto = v;
 }
 
-// ── VT Score display ─────────────────────────
-
-function updateVT(v) {
+export function updateVT(v) {
   const n  = parseInt(v) || 0;
   const el = document.getElementById('cVtDisplay');
   el.textContent = `${n} / 90`;
   el.style.color = vtColor(n);
 }
 
-// ── Generate ─────────────────────────────────
-
-function generate() {
+export function generate() {
   const vt = document.getElementById('cVtScore').value || '0';
   const vl = veredictoLabel(selectedVeredicto);
 
@@ -43,7 +34,7 @@ function generate() {
   setText('cCVT',        `${vt} / 90`);
   setText('cCVeredicto', vl);
 
-  const lines = [
+  document.getElementById('plainBox').textContent = [
     `🔌 *[CONEXIÓN SOSPECHOSA]*`,
     `*Case ID:* ${val('cCaseId')}`,
     `*Time Stamp:* ${val('cTimestamp')}`,
@@ -57,10 +48,4 @@ function generate() {
     `*VT Score:* ${vt} / 90`,
     `*Veredicto:* ${vl}`,
   ].join('\n');
-
-  document.getElementById('plainBox').textContent = lines;
 }
-
-// ── Expose globally ──────────────────────────
-
-window.__conn = { selectVeredicto, updateVT, generate };

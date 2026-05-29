@@ -1,10 +1,6 @@
-// ─────────────────────────────────────────────
-// tabs/file.js — Archivos tab logic
-// ─────────────────────────────────────────────
-
+// tabs/file.js — Archivos
 import { now, val, setText } from '../core.js';
 
-// Input ID → Card element ID mapping
 const FIELD_MAP = [
   ['fCaseId',        'cFCase'],
   ['fTimestamp',     'cFTimestamp'],
@@ -24,14 +20,11 @@ const FIELD_MAP = [
   ['fWildfire',      'cFWildfire'],
 ];
 
-// ── Generate ─────────────────────────────────
-
-function generate() {
+export function generate() {
   document.getElementById('fileTime').textContent = now();
-
   FIELD_MAP.forEach(([inputId, cardId]) => setText(cardId, val(inputId)));
 
-  const lines = [
+  document.getElementById('plainBox').textContent = [
     `📁 *[FILE ALERT — ${val('fSev').toUpperCase()}]*`,
     `*Case ID:* ${val('fCaseId')}`,
     `*Time Stamp:* ${val('fTimestamp')}`,
@@ -50,10 +43,4 @@ function generate() {
     `*Análisis:* ${val('fAnalisis')}`,
     `*Veredicto Wildfire:* ${val('fWildfire')}`,
   ].join('\n');
-
-  document.getElementById('plainBox').textContent = lines;
 }
-
-// ── Expose globally ──────────────────────────
-
-window.__file = { generate };
