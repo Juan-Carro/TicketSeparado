@@ -4,6 +4,7 @@ import { now, val, setText } from '../core.js';
 export function generate() {
   document.getElementById('speiTime').textContent = now();
 
+  setText('cSpCaseID',    val('spCaseID'));
   setText('cSpAgentIp',    val('spAgentIp'));
   setText('cSpActionPort', val('spActionPort'));
   setText('cSpLogonType',  val('spLogonType'));
@@ -14,6 +15,7 @@ export function generate() {
 
   document.getElementById('plainBox').textContent = [
     `🏦 *[SPEI/SPID ALERT]*`,
+    `*Case ID:* ${val('spCaseID')}`,   
     `*Agent IP Address:* ${val('spAgentIp')}`,
     `*Action Port:* ${val('spActionPort')}`,
     `*Logon Type:* ${val('spLogonType')}`,

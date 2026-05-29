@@ -170,6 +170,7 @@
     <!-- SPEI FORM -->
     <div id="speiForm" class="hidden">
       <p class="panel-label" style="color:var(--spei)">⬡ SPEI / SPID — Datos del evento</p>
+      <div class="field"><label>Case ID</label><input id="spCaseID" type="text" placeholder="INSERTE ID DEL CASE"></div>
       <div class="field"><label>Agent IP Address</label><input id="spAgentIp" type="text" placeholder="10.0.0.1 / 203.0.113.45"></div>
       <div class="field"><label>Action Port</label><input id="spActionPort" type="text" placeholder="443, 8080, 3389..."></div>
       <div class="field"><label>Logon Type</label><input id="spLogonType" type="text" placeholder="Ej. 3 - Network, 10 - RemoteInteractive..."></div>
@@ -310,6 +311,7 @@
         <div class="msg-body">
           <div class="msg-title">🏦 SPEI / SPID Alert</div>
           <div class="msg-fields">
+            <div class="msg-field"><span class="msg-field-label">*Case ID:*</span><span class="msg-field-value" id="cSpCaseId">—</span></div>
             <div class="msg-field"><span class="msg-field-label">*Agent IP:*</span><span class="msg-field-value" id="cSpAgentIp">—</span></div>
             <div class="msg-field"><span class="msg-field-label">*Action Port:*</span><span class="msg-field-value" id="cSpActionPort">—</span></div>
             <div class="msg-field"><span class="msg-field-label">*Logon Type:*</span><span class="msg-field-value" id="cSpLogonType">—</span></div>
